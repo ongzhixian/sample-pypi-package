@@ -1,6 +1,13 @@
 name: Continuous Integration (CI)
 
-run-name: Continuous Integration (CI) -- ${{ github.run_id }}
+run-name: |
+  ${{ 
+    github.event_name == 'push' && format('Push: {0} ({1})', github.event.head_commit.message, github.run_id) || 
+    github.event_name == 'pull_request' && format('PR #{0}: {1} ({2})', github.event.pull_request.number, github.event.pull_request.title, github.run_id) || 
+    github.event_name == 'release' && format('Release: {0} ({1})', github.event.release.tag_name, github.run_id) ||
+    github.event_name == 'workflow_dispatch' && format('Manual Run by @{0} ({1})', github.actor, github.run_id) ||
+    format('Workflow Run ID: {0}', github.run_id) # Fallback for other events
+  }}
 
 on:
     push:
@@ -80,16 +87,6 @@ jobs:
               run: ls -R
             
 
-
-    publish-to-pypi:
-        name: Publish to PyPI
-        runs-on: ubuntu-latest
-        needs:
-            - build
-        steps:
-            - name: Run a one-line script
-              run: echo "This job is a placeholder for publishing to PyPI."
-
     publish-to-testpypi:
         name: Publish to TestPyPI
         runs-on: ubuntu-latest
@@ -115,3 +112,20 @@ jobs:
             - name: List downloaded files (for debugging)
               run: ls -R dist/
 
+            - name: Publish package to PyPI
+              uses: pypa/gh-action-pypi-publish@release/v1
+              with:
+                repository-url: https://test.pypi.org/legacy/
+                username: __token__
+                password: ${{ secrets.TESTPYPI_API_TOKEN }}
+
+
+    publish-to-pypi:
+        if: false # This line disables the 'deploy' job
+        name: Publish to PyPI
+        runs-on: ubuntu-latest
+        needs:
+            - build
+        steps:
+            - name: Run a one-line script
+              run: echo "This job is a placeholder for publishing to PyPI."
