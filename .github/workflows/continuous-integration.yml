@@ -73,6 +73,10 @@ jobs:
                 name: python-package-distributions
                 path: dist/
 
+            - name: Run a one-line script
+              run: ls -Recurse
+            
+
 
     publish-to-pypi:
         name: Publish to PyPI
