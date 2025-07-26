@@ -35,6 +35,12 @@ jobs:
               run: >-
                 python3 -m pip install build --user
 
+            - name: Get tags
+              run: git tag
+
+            - name: Get tag at HEAD
+              run: git tag --points-at HEAD
+
             - name: Run a multi-line script
               run: |
                 echo Add other actions to build,
