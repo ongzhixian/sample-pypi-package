@@ -32,6 +32,12 @@ jobs:
               run: >-
                 python3 -m pip install build --user
 
+            - name: Run a multi-line script
+              run: |
+                echo Add other actions to build,
+                echo test, and deploy your project.
+                echo github.run_id
+
             - name: Build a binary wheel and a source tarball
               run: python3 -m build
 
@@ -44,10 +50,7 @@ jobs:
             - name: Run a one-line script
               run: ls
             
-            - name: Run a multi-line script
-              run: |
-                echo Add other actions to build,
-                echo test, and deploy your project.
+
 
     publish-to-pypi:
         name: Publish to PyPI

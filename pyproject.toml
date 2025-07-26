@@ -4,7 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "readyperfectly_sample_package"
-version = "0.0.3"
+#version = "0.0.3"
+dynamic = ["version"]
 authors = [
     { name="Ong Zhi Xian", email="zhixian@hotmail.com" },
 ]
@@ -21,3 +22,7 @@ license-files = ["LICEN[CS]E*"]
 [project.urls]
 Homepage = "https://github.com/ongzhixian/sample-pypi-package/wiki"
 Issues = "https://github.com/ongzhixian/sample-pypi-package/issues"
+
+[tool.hatch.version]
+source = "env"
+variable = "RELEASE_VERSION"
