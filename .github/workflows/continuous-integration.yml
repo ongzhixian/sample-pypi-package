@@ -1,5 +1,7 @@
 name: Continuous Integration (CI)
 
+run-name: Continuous Integration (CI) -- ${{ github.run_id }}
+
 on:
     push:
         branches: 
