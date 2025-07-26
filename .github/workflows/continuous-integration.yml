@@ -54,6 +54,7 @@ jobs:
                 Write-Host "latestVersionNumber : $latestVersionNumber"
                 Add-Content -Path $env:GITHUB_ENV -Value "APP_VERSION=$latestVersionNumber"
                 Write-Host "APP_VERSION environment variable set."
+                Add-Content -Path $env:GITHUB_ENV -Value "RELEASE_VERSION=$latestVersionNumber"
 
             - name: Use the extracted version in a different step (PowerShell)
               run: |
@@ -63,8 +64,8 @@ jobs:
 
 
             - name: Build a binary wheel and a source tarball
-              env:
-                RELEASE_VERSION: "${{ github.run_number }}"
+              # env:
+              #   RELEASE_VERSION: "${{ github.run_number }}"
               run: python3 -m build
 
             - name: Store the distribution packages
