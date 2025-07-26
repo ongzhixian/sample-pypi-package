@@ -12,6 +12,11 @@ on:
         branches:
             - "main"
     workflow_dispatch:
+        inputs:
+            version_override:
+                description: 'Version override'
+                required: false
+                type: string
 
 jobs:
     build:
@@ -35,17 +40,19 @@ jobs:
               run: >-
                 python3 -m pip install build --user
 
-            - name: Run a multi-line script
+            - name: Versioning
               run: |
-                echo "The GitHub Run ID is: ${{ github.run_id }}"
-                echo "The GitHub Run number is: ${{ github.run_number }}"
-                echo "The GitHub Run attempt is: ${{ github.run_attempt }}"
-                Write-Host "Write host run number: ${{ github.run_number}}"
-                $versionOffset = (Get-Content .\version-config.json | ConvertFrom-Json).versionOffset
-                Write-Host "version offset found: $versionOffset"
-                $version = $versionOffset + ${{ github.run_number }}
-                Write-Host "Extracted version: $Version"
-                Add-Content -Path $env:GITHUB_ENV -Value "APP_VERSION=$version"
+                Write-Host "Version override    : ${{ github.event.inputs.version_override }}"
+                Write-Host "GitHub run id       : ${{ github.run_id }}"
+                Write-Host "GitHub run attempt  : ${{ github.run_attempt }}"
+                Write-Host "GitHub run number   : ${{ github.run_number }}"
+                $versionConfig = Get-Content .\version-config.json | ConvertFrom-Json
+                Write-Host "Version (Major)     : $versionConfig.major"
+                Write-Host "Version (Minor)     : $versionConfig.minor"
+                Write-Host "Version (Patch)     : $versionConfig.patch"
+                $latestVersionNumber = "$($versionConfig.major).$($versionConfig.minor).$($versionConfig.patch + ${{ github.run_number }})"
+                Write-Host "latestVersionNumber : $latestVersionNumber"
+                Add-Content -Path $env:GITHUB_ENV -Value "APP_VERSION=$latestVersionNumber"
                 Write-Host "APP_VERSION environment variable set."
 
             - name: Use the extracted version in a different step (PowerShell)
