@@ -22,7 +22,7 @@ on:
 
 jobs:
     build:
-        name: Build and Test
+        name: Build Package
         runs-on: ubuntu-latest
         defaults:
             run:
@@ -93,8 +93,25 @@ jobs:
     publish-to-testpypi:
         name: Publish to TestPyPI
         runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: pwsh
         needs:
             - build
+        permissions:
+            id-token: write
+        environment:
+            name: testpypi
+            url: https://test.pypi.org/project/example-package-ong-zhixian
         steps:
-            - name: Run a one-line script
-              run: echo "This job is a placeholder for publishing to PyPI."
+            - name: Preamble (testing)
+              run: |
+                  Write-Host "This job publish to TestPyPI."
+            - name: Download package from build job
+              uses: actions/download-artifact@v4
+              with:
+                name: python-package-distributions
+                path: dist/
+            - name: List downloaded files (for debugging)
+              run: ls -R dist/
+
