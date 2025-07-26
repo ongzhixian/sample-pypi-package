@@ -37,11 +37,15 @@ jobs:
                 echo Add other actions to build,
                 echo test, and deploy your project.
                 echo "The GitHub Run ID is: ${{ github.run_id }}"
+                echo "The GitHub Run number is: ${{ github.run_number }}"
+                echo "The GitHub Run attempt is: ${{ github.run_attempt }}"
+                
+                
 
             - name: Build a binary wheel and a source tarball
               env:
                 # Environment variables can be set here
-                RELEASE_VERSION: "${{ github.run_id }}-xxx"
+                RELEASE_VERSION: "${{ github.run_number }}"
               run: python3 -m build
 
             - name: Store the distribution packages
