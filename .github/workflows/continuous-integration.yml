@@ -46,7 +46,7 @@ jobs:
                 Write-Host "GitHub run id       : ${{ github.run_id }}"
                 Write-Host "GitHub run attempt  : ${{ github.run_attempt }}"
                 Write-Host "GitHub run number   : ${{ github.run_number }}"
-                $versionConfig = Get-Content .\version-config.json | ConvertFrom-Json
+                $versionConfig = (Get-Content .\version-config.json | ConvertFrom-Json)
                 Write-Host "Version (Major)     : $versionConfig.major"
                 Write-Host "Version (Minor)     : $versionConfig.minor"
                 Write-Host "Version (Patch)     : $versionConfig.patch"
