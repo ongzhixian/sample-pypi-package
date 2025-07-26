@@ -2,9 +2,15 @@ name: Continuous Integration (CI)
 
 on:
     push:
-        branches: [ "main" ]
+        branches: 
+            - "main"
+        tags:
+            - 'v*' # Triggers on tags starting with 'v', e.g., v1.0.0, v2.1
+            - 'release-*' # Triggers on tags starting with 'release-', e.g., release-20250726
+            - '**' # Triggers on any tag push
     pull_request:
-        branches: [ "main" ]
+        branches:
+            - "main"
     workflow_dispatch:
 
 jobs:
