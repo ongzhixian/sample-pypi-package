@@ -37,8 +37,8 @@ jobs:
               run: >-
                 python3 -m pip install build --user
 
-            - name: Get tags2
-              run: Write-Host "The tags are: ${{ github.ref_name }}"
+            - name: assert python version
+              run: Write-Host "${{ github.ref_name }}"
 
             - name: Get tags
               run: git tag
