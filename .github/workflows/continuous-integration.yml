@@ -25,8 +25,6 @@ jobs:
               uses: actions/checkout@v4
               with:
                 persist-credentials: false
-                fetch-depth: 1 # Fetch only the latest commit
-                fetch-tags: true # Explicitly fetch all tags
 
             - name: Set up Python 3.10
               uses: actions/setup-python@v5
@@ -37,31 +35,17 @@ jobs:
               run: >-
                 python3 -m pip install build --user
 
-            - name: Ref_name
-              run: Write-Host "${{ github.ref_name }}"
-
-            - name: xxx
-              run: (git describe --tags --abbrev=0)
-
-            - name: Get tags
-              run: git tag
-
-            - name: Get tag at HEAD
-              run: git tag --points-at HEAD
-
             - name: Run a multi-line script
               run: |
-                echo Add other actions to build,
-                echo test, and deploy your project.
                 echo "The GitHub Run ID is: ${{ github.run_id }}"
                 echo "The GitHub Run number is: ${{ github.run_number }}"
                 echo "The GitHub Run attempt is: ${{ github.run_attempt }}"
                 Write-Host "Write host run number: ${{ github.run_number}}"
-                $FullTag = (git tag --points-at HEAD)
-                Write-Host "Full tag found: $FullTag"
-                $Version = $FullTag -replace '^release/', ''
+                $versionOffset = (Get-Content .\version-config.json | ConvertFrom-Json).versionOffset
+                Write-Host "version offset found: $versionOffset"
+                $version = $versionOffset + ${{ github.run_number }}
                 Write-Host "Extracted version: $Version"
-                Add-Content -Path $env:GITHUB_ENV -Value "APP_VERSION=$Version"
+                Add-Content -Path $env:GITHUB_ENV -Value "APP_VERSION=$version"
                 Write-Host "APP_VERSION environment variable set."
 
             - name: Use the extracted version in a different step (PowerShell)
@@ -81,10 +65,6 @@ jobs:
               with:
                 name: python-package-distributions
                 path: dist/
-
-            - name: Run a one-line script
-              run: ls
-            
 
 
     publish-to-pypi:
