@@ -1,24 +1,62 @@
 name: Continuous Integration (CI)
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+    workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    build:
+        name: Build and Test
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                persist-credentials: false
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: ls
+            - name: Set up Python 3.10
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.10"
+            
+            - name: Install build tools
+              run: >-
+                python3 -m pip install build --user
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+            - name: Build a binary wheel and a source tarball
+              run: python3 -m build
+
+            - name: Store the distribution packages
+              uses: actions/upload-artifact@v4
+              with:
+                name: python-package-distributions
+                path: dist/
+
+            - name: Run a one-line script
+              run: ls
+            
+            - name: Run a multi-line script
+              run: |
+                echo Add other actions to build,
+                echo test, and deploy your project.
+
+    publish-to-pypi:
+        name: Publish to PyPI
+        runs-on: ubuntu-latest
+        needs:
+            - build
+        steps:
+            - name: Run a one-line script
+              run: echo "This job is a placeholder for publishing to PyPI."
+
+    publish-to-testpypi:
+        name: Publish to PyPI
+        runs-on: ubuntu-latest
+        needs:
+            - build
+        steps:
+            - name: Run a one-line script
+              run: echo "This job is a placeholder for publishing to PyPI."
