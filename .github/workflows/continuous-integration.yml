@@ -1,12 +1,11 @@
 name: Continuous Integration (CI)
-
 run-name: |
   ${{ 
     github.event_name == 'push' && format('Push: {0} ({1})', github.event.head_commit.message, github.run_id) || 
     github.event_name == 'pull_request' && format('PR #{0}: {1} ({2})', github.event.pull_request.number, github.event.pull_request.title, github.run_id) || 
     github.event_name == 'release' && format('Release: {0} ({1})', github.event.release.tag_name, github.run_id) ||
     github.event_name == 'workflow_dispatch' && format('Manual Run by @{0} ({1})', github.actor, github.run_id) ||
-    format('Workflow Run ID: {0}', github.run_id) # Fallback for other events
+    format('Workflow Run ID: {0}', github.run_id)
   }}
 
 on:
