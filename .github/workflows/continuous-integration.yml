@@ -17,6 +17,9 @@ jobs:
     build:
         name: Build and Test
         runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: pwsh
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -39,12 +42,23 @@ jobs:
                 echo "The GitHub Run ID is: ${{ github.run_id }}"
                 echo "The GitHub Run number is: ${{ github.run_number }}"
                 echo "The GitHub Run attempt is: ${{ github.run_attempt }}"
-                
-                
+                Write-Host "Write host run number: ${{ github.run_number}}"
+                $FullTag = (git tag --points-at HEAD)
+                Write-Host "Full tag found: $FullTag"
+                $Version = $FullTag -replace '^release/', ''
+                Write-Host "Extracted version: $Version"
+                Add-Content -Path $env:GITHUB_ENV -Value "APP_VERSION=$Version"
+                Write-Host "APP_VERSION environment variable set."
+
+            - name: Use the extracted version in a different step (PowerShell)
+              run: |
+                Write-Host "Building application version: $($env:APP_VERSION)"
+                Write-Host "Simulating a build process for version $($env:APP_VERSION)..."
+                Get-ChildItem # Just to show another command running (PowerShell equivalent of ls -la)
+
 
             - name: Build a binary wheel and a source tarball
               env:
-                # Environment variables can be set here
                 RELEASE_VERSION: "${{ github.run_number }}"
               run: python3 -m build
 
@@ -69,7 +83,7 @@ jobs:
               run: echo "This job is a placeholder for publishing to PyPI."
 
     publish-to-testpypi:
-        name: Publish to PyPI
+        name: Publish to TestPyPI
         runs-on: ubuntu-latest
         needs:
             - build
