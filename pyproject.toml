@@ -3,8 +3,8 @@ requires = ["hatchling >= 1.26"]
 build-backend = "hatchling.build"
 
 [project]
-name = "readyperfectly-sample-package"
-version = "0.0.1"
+name = "readyperfectly_sample_package"
+version = "0.0.3"
 authors = [
     { name="Ong Zhi Xian", email="zhixian@hotmail.com" },
 ]
