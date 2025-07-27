@@ -87,7 +87,7 @@ jobs:
             
 
     publish-to-testpypi:
-        name: Publish to TestPyPI
+        name: 02 Publish to TestPyPI
         runs-on: ubuntu-latest
         defaults:
             run:
@@ -120,7 +120,7 @@ jobs:
 
 
     publish-to-pypi:
-        name: Publish to PyPI
+        name: 01 Publish to PyPI
         runs-on: ubuntu-latest
         defaults:
             run:
