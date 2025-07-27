@@ -122,6 +122,9 @@ jobs:
     publish-to-pypi:
         name: Publish to PyPI
         runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: pwsh
         needs:
             - build
         permissions:
@@ -129,9 +132,6 @@ jobs:
         environment:
             name: pypi
         steps:
-            - name: Preamble (testing)
-              run: |
-                  Write-Host "This job publish to TestPyPI."
             - name: Download package from build job
               uses: actions/download-artifact@v4
               with:
@@ -139,7 +139,6 @@ jobs:
                 path: dist/
             - name: List downloaded files (for debugging)
               run: ls -R dist/
-
             - name: Publish package to PyPI
               uses: pypa/gh-action-pypi-publish@release/v1
               with:
