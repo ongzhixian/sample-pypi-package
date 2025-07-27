@@ -86,8 +86,8 @@ jobs:
               run: ls -R
             
 
-    publish-to-testpypi:
-        name: 02 Publish to TestPyPI
+    publish1-to-testpypi:
+        name: Publish to TestPyPI
         runs-on: ubuntu-latest
         defaults:
             run:
@@ -120,7 +120,7 @@ jobs:
                 attestations: false
 
 
-    publish-to-pypi:
+    publish2-to-pypi:
         name: 01 Publish to PyPI
         runs-on: ubuntu-latest
         defaults:
