@@ -96,13 +96,7 @@ jobs:
             - build
         permissions:
             id-token: write
-        environment:
-            name: testpypi
-            url: https://test.pypi.org/project/example-package-ong-zhixian
         steps:
-            - name: Preamble (testing)
-              run: |
-                  Write-Host "This job publish to TestPyPI."
             - name: Download package from build job
               uses: actions/download-artifact@v4
               with:
@@ -110,7 +104,6 @@ jobs:
                 path: dist/
             - name: List downloaded files (for debugging)
               run: ls -R dist/
-
             - name: Publish package to TestPyPI
               uses: pypa/gh-action-pypi-publish@release/v1
               with:
@@ -120,8 +113,9 @@ jobs:
                 attestations: false
 
 
-    publish2-to-pypi:
-        name: 01 Publish to PyPI
+    publish-to-pypi:
+        if: github.event_name == 'workflow_dispatch'
+        name: Publish to PyPI
         runs-on: ubuntu-latest
         defaults:
             run:
