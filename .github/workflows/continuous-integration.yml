@@ -86,7 +86,8 @@ jobs:
               run: ls -R
             
 
-    publish1-to-testpypi:
+    publish-to-testpypi:
+        if: github.event_name == 'workflow_dispatch'
         name: Publish to TestPyPI
         runs-on: ubuntu-latest
         defaults:
@@ -111,6 +112,8 @@ jobs:
                 user: __token__
                 password: ${{ secrets.TESTPYPI_API_TOKEN }}
                 attestations: false
+            - name: Send publish notification
+              run: Write-Host "Package published to TestPyPI successfully!"
 
 
     publish-to-pypi:
@@ -140,3 +143,5 @@ jobs:
                 user: __token__
                 password: ${{ secrets.PYPI_API_TOKEN }}
                 attestations: false
+            - name: Send publish notification
+              run: Write-Host "Package published to PyPI successfully!"
