@@ -1,0 +1,22 @@
+name: Development Workflow
+
+run-name: Development workflow -- ${{ github.run_id }}
+
+on:
+    push:
+        branches: 
+            - "main"
+
+jobs:
+    publish:
+        if: github.event_name == 'workflow_dispatch'
+        name: Publish Python Package to PyPI
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                shell: pwsh
+        environment:
+            name: pypi
+        steps:
+            - name: List downloaded files (for debugging)
+              run: Write-Host "Listing files in the current directory:"; ls -R
