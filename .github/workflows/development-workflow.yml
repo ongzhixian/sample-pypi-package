@@ -47,14 +47,12 @@ jobs:
               Write-Host "# My New Wiki Page" > wiki-repo/New-Page.md
 
           - name: Commit and push to wiki
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Or your PAT if cross-repo
             working-directory: ./wiki-repo # Perform Git operations in the cloned wiki repo
             run: |
               git config user.name "github-actions[bot]"
               git config user.email "github-actions[bot]@users.noreply.github.com"
               git add .
               git commit -m "Update wiki from GitHub Actions [skip ci]" || echo "No changes to commit"
-              git push
+              # git push
               # Use the GITHUB_TOKEN directly in the push URL for authentication
-              #git push https://github-actions:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git
+              git push https://github-actions:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git
