@@ -59,9 +59,7 @@ jobs:
               run: |
                 Write-Host "Workflow triggered  : ${{ github.event_name }}"
                 Write-Host "Full event payload  : $env:GITHUB_EVENT_CONTEXT"
-                $gitBranch = git branch --show-current
-                Write-Host "Branch name         : $gitBranch"
-                git branch --show-current
+                
                 Write-Host "Version override    : ${{ github.event.inputs.version_override }}"
                 Write-Host "GitHub run id       : ${{ github.run_id }}"
                 Write-Host "GitHub run attempt  : ${{ github.run_attempt }}"
@@ -94,7 +92,11 @@ jobs:
                 Write-Host "github.ref_type : ${{ github.ref_type }}"
                 Write-Host "github.head_ref : ${{ github.head_ref }}"
                 Write-Host "github.base_ref : ${{ github.base_ref }}"
-                
+                git rev-parse --abbrev-ref HEAD
+                $br1 = (git rev-parse --abbrev-ref HEAD)
+                $br2 = (git branch --show-current)
+                Write-Host "BR1         : $br1"
+                Write-Host "BR2         : $br2"
 
             - name: Build a binary wheel and a source tarball
               # env:
