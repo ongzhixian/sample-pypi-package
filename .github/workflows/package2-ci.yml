@@ -53,6 +53,11 @@ jobs:
               run: >-
                 python3 -m pip install build --user
 
+            - name: Dump job github var
+              env:
+                GITHUB_VAR: ${{ toJson(github) }}
+              run: echo "$GITHUB_VAR"
+
             - name: Versioning
               env:
                 GITHUB_EVENT_CONTEXT: ${{ toJson(github.event) }}
