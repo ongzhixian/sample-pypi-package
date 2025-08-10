@@ -92,6 +92,7 @@ jobs:
                 Write-Host "github.ref_type : ${{ github.ref_type }}"
                 Write-Host "github.head_ref : ${{ github.head_ref }}"
                 Write-Host "github.base_ref : ${{ github.base_ref }}"
+                Write-Host "github.base_ref2: ${{ github.event.base_ref }}"
                 git rev-parse --abbrev-ref HEAD
                 $br1 = (git rev-parse --abbrev-ref HEAD)
                 $br2 = (git branch --show-current)
