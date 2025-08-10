@@ -39,6 +39,14 @@ jobs:
             run:
                 shell: pwsh
         steps:
+            - name: Trigger info
+              run: |
+                Write-Host "Trigger event   : ${{ github.event_name }}" # push, pull_request, release, workflow_dispatch
+                Write-Host "github.ref_type : ${{ github.ref_type }}"   # branch, tag, or other
+                Write-Host "github.ref_name : ${{ github.ref_name }}"   # The name of the branch or tag ref that triggered the workflow
+                Write-Host "github.ref      : ${{ github.ref }}"        # The full ref of the branch or tag that triggered the workflow
+                Write-Host "github.head_ref : ${{ github.head_ref }}"   # The name of the branch from which the pull request was created
+
             - name: Checkout
               uses: actions/checkout@v4
               with:
@@ -53,18 +61,8 @@ jobs:
               run: >-
                 python3 -m pip install build --user
 
-            - name: Dump job github var
-              env:
-                GITHUB_VAR: ${{ toJson(github) }}
-              run: echo "$GITHUB_VAR"
-
             - name: Versioning
-              env:
-                GITHUB_EVENT_CONTEXT: ${{ toJson(github.event) }}
               run: |
-                Write-Host "Workflow triggered  : ${{ github.event_name }}"
-                Write-Host "Full event payload  : $env:GITHUB_EVENT_CONTEXT"
-                
                 Write-Host "Version override    : ${{ github.event.inputs.version_override }}"
                 Write-Host "GitHub run id       : ${{ github.run_id }}"
                 Write-Host "GitHub run attempt  : ${{ github.run_attempt }}"
@@ -89,34 +87,6 @@ jobs:
                 Write-Host "Building application version: $($env:APP_VERSION)"
                 Write-Host "Simulating a build process for version $($env:APP_VERSION)..."
                 Get-ChildItem # Just to show another command running (PowerShell equivalent of ls -la)
-
-            - name: Create and Push Tag
-              run: |
-                Write-Host "github.ref_name : ${{ github.ref_name }}"
-                Write-Host "github.ref      : ${{ github.ref }}"
-                Write-Host "github.ref_type : ${{ github.ref_type }}"
-                Write-Host "github.head_ref : ${{ github.head_ref }}"
-                Write-Host "github.base_ref : ${{ github.base_ref }}"
-                Write-Host "github.base_ref2: ${{ github.event.base_ref }}"
-                git rev-parse --abbrev-ref HEAD
-                $br1 = (git rev-parse --abbrev-ref HEAD)
-                $br2 = (git branch --show-current)
-                Write-Host "BR1         : $br1"
-                Write-Host "BR2         : $br2"
-                git branch
-                git status
-                $tagName = "${{ github.ref_name }}"
-                Write-Host "Tagging with alt1 : $($tagName)"
-                $branchName = (git branch --contains "$tagName" | Select-Object -First 1).Trim()
-                Write-Host "Tagging with alt2 : $($branchName)"
-                $sample = (git branch -r --contains ${{ github.ref }})
-                Write-Host "Tagging with samp1 : $($sample)"
-                Write-Host "Tagging with samp2 : $sample"
-                $br3 = (git branch -r --contains ${{ github.ref }})
-                Write-Host "Tagging with BR3 : $br3"
-                $br5 = (git branch -r --contains "${{ github.ref }}")
-                Write-Host "Tagging with BR5 : $br5"
-
 
             - name: Build a binary wheel and a source tarball
               # env:
