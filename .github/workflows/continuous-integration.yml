@@ -88,13 +88,11 @@ jobs:
             - name: Run tests
               run: |
                 # Simulate test execution and get results
-                echo "## Test Results" >> $GITHUB_STEP_SUMMARY
-                echo "- **Passed:** 10" >> $GITHUB_STEP_SUMMARY
-                echo "- **Failed:** 0" >> $GITHUB_STEP_SUMMARY
-                echo "- **Skipped:** 2" >> $GITHUB_STEP_SUMMARY
-                echo "### All tests passed successfully!" >> $GITHUB_STEP_SUMMARY
-
-            
+                "## Test Results" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+                "- **Passed:** 10" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+                "- **Failed:** 0" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+                "- **Skipped:** 2" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+                "### All tests passed successfully!" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
 
     publish-to-testpypi:
         if: github.event_name == 'workflow_dispatch'
