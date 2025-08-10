@@ -3,7 +3,7 @@ requires = ["hatchling >= 1.26"]
 build-backend = "hatchling.build"
 
 [project]
-name = "readyperfectly"
+name = "readyperfectly-sample-package"
 #version = "0.0.3"
 dynamic = ["version"]
 authors = [
@@ -26,3 +26,9 @@ Issues = "https://github.com/ongzhixian/sample-pypi-package/issues"
 [tool.hatch.version]
 source = "env"
 variable = "RELEASE_VERSION"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/readyperfectly"]
+
+[tool.hatch.build.targets.sdist]
+packages = ["src/readyperfectly"]
