@@ -162,8 +162,6 @@ jobs:
         defaults:
             run:
                 shell: pwsh
-        needs:
-            - build
         permissions:
             id-token: write
         environment:
