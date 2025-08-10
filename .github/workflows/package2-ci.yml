@@ -100,6 +100,11 @@ jobs:
                 Write-Host "BR2         : $br2"
                 git branch
                 git status
+                $tagName = ${{ github.ref_name }}"
+                Write-Host "Tagging with 1: $tagName"
+                $branchName = (git branch --contains $tagName | Select-Object -First 1).Trim()
+                Write-Host "Tagging with 2: $branchName"
+
 
             - name: Build a binary wheel and a source tarball
               # env:
