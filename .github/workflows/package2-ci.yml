@@ -1,3 +1,6 @@
+# Giithub Actions Workflow
+# Use to publish a Python package to PyPI or TestPyPI on package2 branch
+# We want to use this workflow to test the publishing of a package named "readyperfectly-sample-package2"
 name: Package2 (CI)
 run-name: |
   ${{ 
@@ -65,8 +68,6 @@ jobs:
                 Add-Content -Path $env:GITHUB_ENV -Value "APP_VERSION=$latestVersionNumber"
                 Write-Host "APP_VERSION environment variable set."
                 Add-Content -Path $env:GITHUB_ENV -Value "RELEASE_VERSION=$latestVersionNumber"
-                #"MY_ENV_VAR=value_from_job1" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-                #Write-Host "Set MY_ENV_VAR in GITHUB_ENV"
 
             - name: Set release version variable
               id: set_release_version_var
@@ -78,6 +79,12 @@ jobs:
                 Write-Host "Building application version: $($env:APP_VERSION)"
                 Write-Host "Simulating a build process for version $($env:APP_VERSION)..."
                 Get-ChildItem # Just to show another command running (PowerShell equivalent of ls -la)
+
+            - name: Create and Push Tag
+              run: |
+                git tag -a $env:RELEASE_VERSION -m "Release $env:RELEASE_VERSION"
+                git push origin $env:RELEASE_VERSION
+                git push origin ${{ github.ref_name }} 
 
 
             - name: Build a binary wheel and a source tarball
