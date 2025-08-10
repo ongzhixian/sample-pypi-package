@@ -85,19 +85,13 @@ jobs:
             - name: Run a one-line script
               run: ls -R
 
-            - name: Run tests
-              run: |
-                # Simulate test execution and get results
-                "## Test Results" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-                "- **Passed:** 10" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-                "- **Failed:** 0" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-                "- **Skipped:** 2" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
-                "### All tests passed successfully!" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
 
     publish-to-testpypi:
         if: github.event_name == 'workflow_dispatch'
         name: Publish to TestPyPI
         runs-on: ubuntu-latest
+        outputs:
+            publish_to_testpypi: ${{ steps.set_completion_var.outputs.publish_to_testpypi }} # Maps step output to job output
         defaults:
             run:
                 shell: pwsh
@@ -122,6 +116,11 @@ jobs:
                 attestations: false
             - name: Send publish notification
               run: Write-Host "Package published to TestPyPI successfully!"
+            - name: Set completion variable
+              id: set_completion_var
+              run: |
+                Write-Host "::set-output name=publish_to_testpypi::$true"
+
 
     publish-to-pypi:
         if: github.event_name == 'workflow_dispatch'
@@ -152,3 +151,49 @@ jobs:
                 attestations: false
             - name: Send publish notification
               run: Write-Host "Package published to PyPI successfully!"
+
+    update_summary:
+        name: Update Summary
+        runs-on: ubuntu-latest
+        needs: 
+            - publish-to-testpypi
+            - publish-to-pypi
+        if: always()
+        defaults:
+            run:
+                shell: pwsh
+        needs:
+            - build
+        permissions:
+            id-token: write
+        environment:
+            name: pypi
+        steps:
+        - name: Prepend content to summary
+          run: |
+            # Retrieve outputs from job1 and job3.
+            # These will be empty strings if the respective job was skipped.
+            $publishToTestPypi = "${{ needs.publish-to-testpypi.outputs.publish_to_testpypi }}"
+            $publishToPypi = "${{ needs.publishToTestPypi.outputs.job3_variable }}"
+
+            # Define the new content to prepend
+            $newContent = @(
+              "## Test Results"
+              "- **Passed:** 10"
+              "- **Failed:** 0"
+              "- **Skipped:** 2"
+              "### All tests passed successfully!"
+              "## Publish Status"
+            )
+            if ($publishToTestPypi -eq 'true') {
+                $newContent += "- **TestPyPI:** Successfully published"
+            }
+
+            # Get the existing content of the summary file
+            $existingContent = Get-Content -Path $env:GITHUB_STEP_SUMMARY
+
+            # Combine the new and existing content
+            $combinedContent = $newContent + $existingContent
+
+            # Write the combined content back to the file
+            $combinedContent | Out-File -FilePath $env:GITHUB_STEP_SUMMARY
