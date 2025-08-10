@@ -176,6 +176,7 @@ jobs:
 
             # Define the new content to prepend
             $newContent = @(
+              "## Release $env:RELEASE_VERSION"
               "## Test Results"
               "- **Passed:** 10"
               "- **Failed:** 0"
@@ -183,15 +184,19 @@ jobs:
               "### All tests passed successfully!"
               "## Publish Status $publishToTestPypi"
             )
+            # $newContent += "- **TestPyPI:** Successfully published"
+
+            $summary = [System.Collections.Generic.List[string]]@()
+            $summary.Add("## Release $env:RELEASE_VERSION")
             if ($publishToTestPypi -eq 'true') {
-                $newContent += "- **TestPyPI:** Successfully published"
+                $summary.Add("TestPyPI: Successfully published")
             }
 
             # Get the existing content of the summary file
             $existingContent = Get-Content -Path $env:GITHUB_STEP_SUMMARY
 
             # Combine the new and existing content
-            $combinedContent = $newContent + $existingContent
+            $combinedContent = $summary + $newContent + $existingContent
 
             # Write the combined content back to the file
             $combinedContent | Out-File -FilePath $env:GITHUB_STEP_SUMMARY
