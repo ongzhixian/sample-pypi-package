@@ -27,8 +27,5 @@ Issues = "https://github.com/ongzhixian/sample-pypi-package/issues"
 source = "env"
 variable = "RELEASE_VERSION"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/readyperfectly"]
-
 [tool.hatch.build.targets.sdist]
 packages = ["src/readyperfectly"]
