@@ -54,9 +54,11 @@ jobs:
                 python3 -m pip install build --user
 
             - name: Versioning
+              env:
+                GITHUB_EVENT_CONTEXT: ${{ toJson(github.event) }}
               run: |
                 Write-Host "Workflow triggered  : ${{ github.event_name }}"
-                Write-Host "Full event payload  : ${{ toJson(github.event) }}"
+                Write-Host "Full event payload  : $env:GITHUB_EVENT_CONTEXT"
                 Write-Host "Version override    : ${{ github.event.inputs.version_override }}"
                 Write-Host "GitHub run id       : ${{ github.run_id }}"
                 Write-Host "GitHub run attempt  : ${{ github.run_attempt }}"
