@@ -61,6 +61,7 @@ jobs:
                 Write-Host "Full event payload  : $env:GITHUB_EVENT_CONTEXT"
                 $gitBranch = git branch --show-current
                 Write-Host "Branch name         : $gitBranch"
+                git branch --show-current
                 Write-Host "Version override    : ${{ github.event.inputs.version_override }}"
                 Write-Host "GitHub run id       : ${{ github.run_id }}"
                 Write-Host "GitHub run attempt  : ${{ github.run_attempt }}"
