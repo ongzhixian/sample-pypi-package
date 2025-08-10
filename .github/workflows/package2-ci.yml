@@ -83,9 +83,11 @@ jobs:
 
             - name: Create and Push Tag
               run: |
-                Write-Host "github.ref_name: ${{ github.ref_name }}"
-                Write-Host "github.ref: ${{ github.ref }}"
-                GITHUB_HEAD_REF = "${{ github.head_ref }}"
+                Write-Host "github.ref_name : ${{ github.ref_name }}"
+                Write-Host "github.ref      : ${{ github.ref }}"
+                Write-Host "github.head_ref : ${{ github.head_ref }}"
+                Write-Host "github.head_ref : ${{ GITHUB_HEAD_REF }}"
+                Write-Host "github.head_ref : $GITHUB_HEAD_REF"
 
 
             - name: Build a binary wheel and a source tarball
