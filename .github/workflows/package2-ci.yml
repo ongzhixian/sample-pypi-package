@@ -13,8 +13,8 @@ run-name: |
 
 on:
     push:
-        branches: 
-            - "package2"
+        # branches: 
+        #     - "package2"
         tags:
             - 'v*' # Triggers on tags starting with 'v', e.g., v1.0.0, v2.1
             - 'release-*' # Triggers on tags starting with 'release-', e.g., release-20250726
@@ -55,6 +55,7 @@ jobs:
 
             - name: Versioning
               run: |
+                Write-Host "Workflow triggered  : ${{ github.event_name }}"
                 Write-Host "Version override    : ${{ github.event.inputs.version_override }}"
                 Write-Host "GitHub run id       : ${{ github.run_id }}"
                 Write-Host "GitHub run attempt  : ${{ github.run_attempt }}"
@@ -84,6 +85,7 @@ jobs:
               run: |
                 Write-Host "github.ref_name: ${{ github.ref_name }}"
                 Write-Host "github.ref: ${{ github.ref }}"
+                GITHUB_HEAD_REF = "${{ github.head_ref }}"
 
 
             - name: Build a binary wheel and a source tarball
