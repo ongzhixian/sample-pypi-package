@@ -1,2 +1,2 @@
-def add_two(number):
-    return number + 2
+def mult_two(number):
+    return number * 2
