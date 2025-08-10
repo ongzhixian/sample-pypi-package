@@ -103,7 +103,7 @@ jobs:
                 $tagName = "${{ github.ref_name }}"
                 Write-Host "Tagging with alt1 : $($tagName)"
                 $branchName = (git branch --contains $tagName | Select-Object -First 1).Trim()
-                Write-Host "Tagging with alt2 : $($branchName)""
+                Write-Host "Tagging with alt2 : $($branchName)"
 
 
             - name: Build a binary wheel and a source tarball
