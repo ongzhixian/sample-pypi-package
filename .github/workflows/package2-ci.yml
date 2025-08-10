@@ -97,6 +97,8 @@ jobs:
                 $br2 = (git branch --show-current)
                 Write-Host "BR1         : $br1"
                 Write-Host "BR2         : $br2"
+                git branch
+                git status
 
             - name: Build a binary wheel and a source tarball
               # env:
