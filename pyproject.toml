@@ -3,7 +3,7 @@ requires = ["hatchling >= 1.26"]
 build-backend = "hatchling.build"
 
 [project]
-name = "readyperfectly_sample_package"
+name = "readyperfectly"
 #version = "0.0.3"
 dynamic = ["version"]
 authors = [
