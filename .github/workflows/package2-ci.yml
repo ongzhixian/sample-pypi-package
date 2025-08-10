@@ -100,7 +100,7 @@ jobs:
                 Write-Host "BR2         : $br2"
                 git branch
                 git status
-                $tagName = ${{ github.ref_name }}"
+                $tagName = "${{ github.ref_name }}"
                 Write-Host "Tagging with alt1 : $($tagName)"
                 $branchName = (git branch --contains $tagName | Select-Object -First 1).Trim()
                 Write-Host "Tagging with alt2 : $($branchName)""
