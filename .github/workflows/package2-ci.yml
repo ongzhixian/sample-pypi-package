@@ -82,9 +82,8 @@ jobs:
 
             - name: Create and Push Tag
               run: |
-                git tag -a $env:RELEASE_VERSION -m "Release $env:RELEASE_VERSION"
-                git push origin $env:RELEASE_VERSION
-                git push origin ${{ github.ref_name }} 
+                Write-Host "github.ref_name: ${{ github.ref_name }}"
+                Write-Host "github.ref: ${{ github.ref }}"
 
 
             - name: Build a binary wheel and a source tarball
