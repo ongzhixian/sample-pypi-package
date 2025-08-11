@@ -36,6 +36,14 @@ jobs:
             run:
                 shell: pwsh
         steps:
+            - name: Trigger info
+              run: |
+                Write-Host "Trigger event   : ${{ github.event_name }}" # push, pull_request, release, workflow_dispatch
+                Write-Host "github.ref_type : ${{ github.ref_type }}"   # branch, tag, or other
+                Write-Host "github.ref_name : ${{ github.ref_name }}"   # The name of the branch or tag ref that triggered the workflow
+                Write-Host "github.ref      : ${{ github.ref }}"        # The full ref of the branch or tag that triggered the workflow
+                Write-Host "github.head_ref : ${{ github.head_ref }}"   # The name of the branch from which the pull request was created
+
             - name: Checkout
               uses: actions/checkout@v4
               with:
@@ -67,11 +75,16 @@ jobs:
                 Add-Content -Path $env:GITHUB_ENV -Value "RELEASE_VERSION=$latestVersionNumber"
                 #"MY_ENV_VAR=value_from_job1" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
                 #Write-Host "Set MY_ENV_VAR in GITHUB_ENV"
+                
 
             - name: Set release version variable
               id: set_release_version_var
               run: |
-                Write-Host "::set-output name=release_version::$env:RELEASE_VERSION"
+                # Write-Host "::set-output name=release_version::$env:RELEASE_VERSION"
+                # The above line sets the output variable for this job
+                # run: echo "{name}={value}" >> $GITHUB_OUTPUT
+                "release_version=$env:RELEASE_VERSION" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+                
 
             - name: Use the extracted version in a different step (PowerShell)
               run: |
@@ -101,7 +114,6 @@ jobs:
                 )
                 # Write the combined content back to the file
                 $summary | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
-
 
 
     publish-to-testpypi:
