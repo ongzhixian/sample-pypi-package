@@ -75,7 +75,7 @@ jobs:
                     # Parse the tag name to extract the version
                     # Assumes the tag follows a pattern like 'v1.2.3' or 'release-1.2.3'
                     $tagRegex = [regex]'(?i)(?<Prefix>.*?)(?<Version>\d+\.\d+.\d+)'
-                    $tagVersion = ${{ github.ref_name }}
+                    $tagVersion = "${{ github.ref_name }}"
                     $match = $tagRegex.Match($tagVersion)
                     if ($match.Success) {
                         $latestVersionNumber = $match.Groups['Version']
