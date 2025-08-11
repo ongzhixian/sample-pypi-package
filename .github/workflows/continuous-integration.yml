@@ -70,11 +70,42 @@ jobs:
                 Write-Host "Version (Patch)     : $versionConfig.patch"
                 $latestVersionNumber = "$($versionConfig.major).$($versionConfig.minor).$($versionConfig.patch + ${{ github.run_number }})"
                 Write-Host "latestVersionNumber : $latestVersionNumber"
+
+                if "${{ github.ref_type }}" -eq 'tag' { 
+                    # Parse the tag name to extract the version
+                    # Assumes the tag follows a pattern like 'v1.2.3' or 'release-1.2.3'
+                    $tagRegex = [regex]'(?i)(?<Prefix>.*?)(?<Version>\d+\.\d+.\d+)'
+                    $tagVersion = ${{ github.ref_name }}
+                    $match = $tagRegex.Match($tagVersion)
+                    if ($match.Success) {
+                        $latestVersionNumber = $match.Groups['Version']
+                        Write-Host "Extracted version from tag: $latestVersionNumber"
+                    } else {
+                        Write-Host "No valid version found in tag: $tagVersion"
+                    }
+                }
+
+                # Expose the version as an environment variable for use in subsequent steps
                 Add-Content -Path $env:GITHUB_ENV -Value "APP_VERSION=$latestVersionNumber"
                 Write-Host "APP_VERSION environment variable set."
                 Add-Content -Path $env:GITHUB_ENV -Value "RELEASE_VERSION=$latestVersionNumber"
                 #"MY_ENV_VAR=value_from_job1" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
                 #Write-Host "Set MY_ENV_VAR in GITHUB_ENV"
+                # 
+                if ${{ github.ref_type }} -eq 'tag' {
+                    Write-Host "Detected tag push, setting RELEASE_VERSION to $latestVersionNumber"
+                    "RELEASE_VERSION=$latestVersionNumber" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+                } elseif ${{ github.event_name }} -eq 'workflow_dispatch' {
+                    if (${{ github.event.inputs.version_override }}) {
+                        Write-Host "Using version override: ${{ github.event.inputs.version_override }}"
+                        "RELEASE_VERSION=${{ github.event.inputs.version_override }}" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+                    } else {
+                        Write-Host "No version override provided, using default: $latestVersionNumber"
+                        "RELEASE_VERSION=$latestVersionNumber" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+                    }
+                } else {
+                    Write-Host "Not a tag push or manual run, skipping RELEASE_VERSION setting."
+                }
                 
 
             - name: Set release version variable
