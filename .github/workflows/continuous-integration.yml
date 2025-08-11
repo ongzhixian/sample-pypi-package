@@ -71,7 +71,7 @@ jobs:
                 $latestVersionNumber = "$($versionConfig.major).$($versionConfig.minor).$($versionConfig.patch + ${{ github.run_number }})"
                 Write-Host "latestVersionNumber : $latestVersionNumber"
 
-                if "${{ github.ref_type }}" -eq 'tag' { 
+                if ("${{ github.ref_type }}" -eq 'tag') { 
                     # Parse the tag name to extract the version
                     # Assumes the tag follows a pattern like 'v1.2.3' or 'release-1.2.3'
                     $tagRegex = [regex]'(?i)(?<Prefix>.*?)(?<Version>\d+\.\d+.\d+)'
