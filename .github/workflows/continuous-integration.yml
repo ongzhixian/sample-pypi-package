@@ -91,22 +91,6 @@ jobs:
                 Add-Content -Path $env:GITHUB_ENV -Value "RELEASE_VERSION=$latestVersionNumber"
                 #"MY_ENV_VAR=value_from_job1" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
                 #Write-Host "Set MY_ENV_VAR in GITHUB_ENV"
-                # 
-                if ${{ github.ref_type }} -eq 'tag' {
-                    Write-Host "Detected tag push, setting RELEASE_VERSION to $latestVersionNumber"
-                    "RELEASE_VERSION=$latestVersionNumber" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-                } elseif ${{ github.event_name }} -eq 'workflow_dispatch' {
-                    if (${{ github.event.inputs.version_override }}) {
-                        Write-Host "Using version override: ${{ github.event.inputs.version_override }}"
-                        "RELEASE_VERSION=${{ github.event.inputs.version_override }}" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-                    } else {
-                        Write-Host "No version override provided, using default: $latestVersionNumber"
-                        "RELEASE_VERSION=$latestVersionNumber" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-                    }
-                } else {
-                    Write-Host "Not a tag push or manual run, skipping RELEASE_VERSION setting."
-                }
-                
 
             - name: Set release version variable
               id: set_release_version_var
